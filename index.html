@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family & Possessives — Interactive Homework</title>
+<link rel="icon" type="image/png" href="favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #f4f8fc;
+      --bg-card: #ffffff;
+      --sky-top: #cfeaff;
+      --sky-bottom: #eef7ff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent-yellow: #ffd93d;
+      --accent-yellow-dark: #e5b800;
+      --accent-pink: #ff6b9d;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #dbe7f3;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --error: #dc2626;
+      --error-bg: #fee2e2;
+      --shadow: 0 8px 24px rgba(30, 41, 59, 0.08);
+      --radius: 18px;
+      --sticky-top: 145px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(180deg, #e8f4ff 0%, #f8fbff 45%, #f4f7fb 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ===== START SCREEN MODAL ===== */
+    .start-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .start-overlay.hidden {
+      display: none;
+    }
+
+    .start-card {
+      background: #fff;
+      border-radius: 26px;
+      max-width: 460px;
+      width: 100%;
+      padding: 36px 32px;
+      text-align: center;
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.18);
+      border: 3px solid var(--accent-yellow);
+    }
+
+    .start-badge {
+      display: inline-block;
+      background: #fef3c7;
+      color: #b45309;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      letter-spacing: 0.4px;
+    }
+
+    .start-card h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.9rem;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .start-card p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .name-input {
+      width: 100%;
+      padding: 14px 18px;
+      font-size: 1.05rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 10px;
+    }
+
+    .name-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .name-error {
+      color: var(--error);
+      font-size: 0.9rem;
+      font-weight: 700;
+      min-height: 20px;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.24);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text-main);
+      border: 2px solid var(--border);
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ===== STICKY HEADER + PROGRESS + TABS ===== */
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--border);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 20px 12px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .brand-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .student-pill {
+      background: #eff6ff;
+      color: var(--primary);
+      border: 1.5px solid #bfdbfe;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #2563eb, #22c55e);
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .progress-text {
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      min-width: 115px;
+      text-align: right;
+    }
+
+    /* Prominent Tabs */
+    .tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .tab-btn:hover {
+      border-color: #93c5fd;
+      background: #eff6ff;
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+    }
+
+    .tab-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.12);
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .tab-btn.active .tab-num {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+
+    .tab-btn.done-tab .tab-num {
+      background: var(--success);
+      color: #fff;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .main-container {
+      max-width: 1120px;
+      margin: 26px auto 0;
+      padding: 0 20px;
+    }
+
+    .exercise-panel {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .exercise-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .exercise-card {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--border);
+    }
+
+    .exercise-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .exercise-header h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .exercise-header p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    /* ===== EXERCISE 1: SIMPSONS WORKSHEET ===== */
+    .simpsons-board {
+      background: linear-gradient(180deg, #b8e3ff 0%, #dcf1ff 45%, #eef8ff 100%);
+      border-radius: 22px;
+      padding: 24px;
+      border: 3px solid #93c5fd;
+      position: relative;
+      overflow: visible;
+    }
+
+    .simpsons-top-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .simpsons-logo {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: #ffd93d;
+      -webkit-text-stroke: 2px #1e293b;
+      text-shadow: 3px 3px 0 #1e293b;
+      letter-spacing: 1px;
+      line-height: 1;
+    }
+
+    .simpsons-instruction-bubble {
+      background: #fff;
+      border: 3px solid #1e293b;
+      border-radius: 999px;
+      padding: 12px 22px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-align: center;
+      max-width: 440px;
+      box-shadow: 4px 4px 0 rgba(30, 41, 59, 0.15);
+    }
+
+    .word-bank-sticky {
+      position: sticky;
+      top: var(--sticky-top, 145px);
+      z-index: 150;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border: 2.5px dashed #334155;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+    }
+
+    .word-bank-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .word-bank-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .word-chip {
+      background: #fef9c3;
+      border: 2px solid #1e293b;
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: #1e293b;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.15s, background 0.15s, opacity 0.2s;
+      box-shadow: 2px 2px 0 #1e293b;
+    }
+
+    .word-chip:hover {
+      transform: translateY(-2px);
+      background: #fde047;
+    }
+
+    .word-chip.selected {
+      background: #2563eb;
+      color: #fff;
+      border-color: #1e3a8a;
+      transform: scale(1.06);
+    }
+
+    .word-chip.used {
+      opacity: 0.3;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Simpsons Grid */
+    .simpsons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .char-scene {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 20px;
+      padding: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+    }
+
+    .char-scene.reverse {
+      flex-direction: row-reverse;
+    }
+
+    .char-img {
+      width: 125px;
+      height: 155px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 6px 8px rgba(15, 23, 42, 0.14));
+    }
+
+    .char-img.tall {
+      height: 185px;
+    }
+
+    .char-img.wide {
+      width: 155px;
+      height: 165px;
+    }
+
+    .house-img {
+      width: 185px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 3px solid #1e293b;
+      box-shadow: 4px 4px 0 rgba(30, 41, 59, 0.14);
+      flex-shrink: 0;
+    }
+
+    .speech-bubble {
+      background: #fff;
+      border: 3px solid #1e293b;
+      border-radius: 20px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.85;
+      position: relative;
+      flex: 1;
+      box-shadow: 4px 4px 0 rgba(30, 41, 59, 0.12);
+    }
+
+    .speech-bubble.narrator {
+      border-style: dashed;
+      border-color: #ec4899;
+      background: #fff5f8;
+    }
+
+    .narrator-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #be185d;
+      background: #fce7f3;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .drop-blank {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 74px;
+      height: 32px;
+      padding: 0 10px;
+      margin: 0 3px;
+      border-bottom: 3px solid #2563eb;
+      background: #eff6ff;
+      border-radius: 8px 8px 3px 3px;
+      font-weight: 800;
+      color: #1d4ed8;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: all 0.15s;
+    }
+
+    .drop-blank.drag-over {
+      background: #fde047;
+      border-color: #1e293b;
+      transform: scale(1.06);
+    }
+
+    .drop-blank.filled {
+      background: #fef08a;
+      border: 2px solid #1e293b;
+      border-radius: 8px;
+      color: #1e293b;
+    }
+
+    .drop-blank.correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success) !important;
+      color: #15803d !important;
+    }
+
+    .drop-blank.wrong {
+      background: var(--error-bg) !important;
+      border-color: var(--error) !important;
+      color: #b91c1c !important;
+    }
+
+    .simpsons-full-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 24px;
+    }
+
+    /* ===== EXERCISES 2, 3, 4 ===== */
+    .q-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .q-item {
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .q-item.correct {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    .q-item.wrong {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .q-prompt {
+      font-size: 1.03rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .q-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: #dbeafe;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 800;
+      margin-right: 8px;
+    }
+
+    .options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .opt-btn {
+      padding: 9px 16px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .opt-btn:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .opt-btn.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .opt-btn.correct-choice {
+      background: var(--success) !important;
+      border-color: var(--success) !important;
+      color: #fff !important;
+    }
+
+    .opt-btn.wrong-choice {
+      background: var(--error) !important;
+      border-color: var(--error) !important;
+      color: #fff !important;
+    }
+
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .vocab-select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: #fff;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .vocab-select:focus {
+      border-color: var(--primary);
+    }
+
+    /* Ex 4 Word Bank & Inline Inputs */
+    .ex4-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+    }
+
+    .ex4-bank-tag {
+      background: #fff;
+      border: 1.5px solid #93c5fd;
+      color: #1e40af;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .inline-input {
+      width: 165px;
+      padding: 6px 12px;
+      margin: 0 4px;
+      border: 2px solid #93c5fd;
+      border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: var(--primary);
+      background: #fff;
+      outline: none;
+    }
+
+    .inline-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .inline-input.correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #15803d;
+    }
+
+    .inline-input.wrong {
+      background: var(--error-bg);
+      border-color: var(--error);
+      color: #b91c1c;
+    }
+
+    /* ===== FOOTER NAV & SUBMIT ===== */
+    .panel-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 2px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .submit-box {
+      margin-top: 28px;
+      background: linear-gradient(135deg, #eff6ff 0%, #fefce8 100%);
+      border: 2px solid #bfdbfe;
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .submit-box h3 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .submit-box p {
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .btn-send {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff;
+      border: none;
+      padding: 15px 34px;
+      border-radius: 16px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1.08rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.25);
+      transition: transform 0.15s, opacity 0.2s;
+    }
+
+    .btn-send:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-send:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-banner {
+      margin-top: 18px;
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      display: none;
+    }
+
+    .result-banner.show {
+      display: block;
+    }
+
+    .result-banner.success {
+      background: var(--success-bg);
+      color: #166534;
+      border: 2px solid #86efac;
+    }
+
+    .result-banner.warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #fcd34d;
+    }
+
+    @media (max-width: 860px) {
+      .tabs-nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .simpsons-grid,
+      .simpsons-full-row,
+      .vocab-grid {
+        grid-template-columns: 1fr;
+      }
+      .char-scene,
+      .char-scene.reverse {
+        flex-direction: column;
+        text-align: left;
+      }
+      .char-img {
+        height: 130px;
+      }
+      .house-img {
+        width: 100%;
+        max-width: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- START SCREEN -->
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-card">
+      <div class="start-badge">ENGLISH HOMEWORK</div>
+      <h1>Family & Possessives</h1>
+      <p>Enter your name to start the 4 interactive exercises. When you finish, click <strong>Send to Teacher</strong>.</p>
+      <input type="text" id="studentNameInput" class="name-input" placeholder="Your name (e.g. Anna K.)" autocomplete="off" />
+      <div class="name-error" id="nameError"></div>
+      <button class="btn-primary" id="startBtn" style="width:100%;">Start Homework →</button>
+    </div>
+  </div>
+
+  <!-- STICKY HEADER -->
+  <header class="top-header">
+    <div class="header-inner">
+      <div class="header-top-row">
+        <div class="brand-title">🏡 Family & Possessives</div>
+        <div class="student-pill" id="studentDisplay">Student: —</div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 47 (0%)</div>
+      </div>
+
+      <nav class="tabs-nav" aria-label="Exercises">
+        <button class="tab-btn active" data-tab="ex1">
+          <span class="tab-num" id="badge-ex1">1</span>
+          <span>The Simpsons</span>
+        </button>
+        <button class="tab-btn" data-tab="ex2">
+          <span class="tab-num" id="badge-ex2">2</span>
+          <span>Possessive 's</span>
+        </button>
+        <button class="tab-btn" data-tab="ex3">
+          <span class="tab-num" id="badge-ex3">3</span>
+          <span>Family Words</span>
+        </button>
+        <button class="tab-btn" data-tab="ex4">
+          <span class="tab-num" id="badge-ex4">4</span>
+          <span>Final Mix</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ==================== EXERCISE 1 ==================== -->
+    <section class="exercise-panel active" id="ex1">
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <h2>Exercise 1: Possessive Adjectives with The Simpsons</h2>
+            <p>Drag a word to a blank, or tap a word and then tap a blank. Tap a filled blank to remove it.</p>
+          </div>
+          <button class="btn-secondary" id="resetEx1Btn">Reset Ex 1</button>
+        </div>
+
+        <div class="simpsons-board">
+          <div class="simpsons-top-banner">
+            <div class="simpsons-logo">THE SIMPSONS</div>
+            <div class="simpsons-instruction-bubble">
+              Drag the correct possessive adjective to the blank.<br>
+              Pay attention: who is speaking? About whom?
+            </div>
+          </div>
+
+          <div class="word-bank-sticky">
+            <div class="word-bank-hint">
+              <span><strong>Word Bank</strong> (17 words)</span>
+              <span>Tip: Capital letters usually go at the start of a sentence!</span>
+            </div>
+            <div class="word-bank-list" id="wordBank"></div>
+          </div>
+
+          <div class="simpsons-grid">
+            <!-- BART -->
+            <div class="char-scene">
+              <img src="bart.png" alt="Bart" class="char-img" />
+              <div class="speech-bubble">
+                Hi! <span class="drop-blank" data-id="s1" data-ans="my"></span> name is Bart.<br>
+                I have two sisters. <span class="drop-blank" data-id="s2" data-ans="their"></span> names are Lisa and Maggie.
+              </div>
+            </div>
+
+            <!-- HOMER -->
+            <div class="char-scene reverse">
+              <img src="homer.png" alt="Homer" class="char-img" />
+              <div class="speech-bubble">
+                Hi! I'm Homer. I love <span class="drop-blank" data-id="s3" data-ans="my"></span> donut!
+                <span class="drop-blank" data-id="s4" data-ans="its"></span> topping is pink.<br>
+                This is <span class="drop-blank" data-id="s5" data-ans="my|our"></span> family!
+              </div>
+            </div>
+
+            <!-- MARGE -->
+            <div class="char-scene">
+              <img src="marge.png" alt="Marge" class="char-img tall" />
+              <div class="speech-bubble">
+                Hi! I'm Marge. I love <span class="drop-blank" data-id="s6" data-ans="my"></span> kids!
+                <span class="drop-blank" data-id="s7" data-ans="their"></span> father is Homer.
+                <span class="drop-blank" data-id="s8" data-ans="his"></span> car is pink and old.
+              </div>
+            </div>
+
+            <!-- LISA -->
+            <div class="char-scene reverse">
+              <img src="lisa.png" alt="Lisa" class="char-img" />
+              <div class="speech-bubble">
+                I'm Lisa! <span class="drop-blank" data-id="s9" data-ans="my"></span> parents are Homer and Marge.<br>
+                This is <span class="drop-blank" data-id="s10" data-ans="our|my"></span> house!
+              </div>
+            </div>
+
+            <!-- ABOUT LISA (PINK HOUSE & DOLL) -->
+            <div class="char-scene" style="grid-column: 1 / -1;">
+              <img src="house.png" alt="Simpsons Pink House" class="house-img" />
+              <div class="speech-bubble narrator">
+                <div class="narrator-tag">About Lisa (3rd person)</div><br>
+                <span class="drop-blank" data-id="s11" data-ans="her"></span> house is pink and
+                <span class="drop-blank" data-id="s12" data-ans="her"></span> favourite toy is the Malibu Stacy. 🎀
+              </div>
+            </div>
+
+            <!-- BOTTOM ROW: NED & FAMILY -->
+            <div class="simpsons-full-row">
+              <!-- NED -->
+              <div class="char-scene">
+                <img src="ned.png" alt="Ned Flanders" class="char-img" />
+                <div class="speech-bubble">
+                  What about you? Tell me about <span class="drop-blank" data-id="s13" data-ans="your"></span> family!
+                </div>
+              </div>
+
+              <!-- SIMPSONS FAMILY -->
+              <div class="char-scene reverse">
+                <img src="family.png" alt="The Simpsons Family" class="char-img wide" />
+                <div class="speech-bubble">
+                  This is <span class="drop-blank" data-id="s14" data-ans="our"></span> family!
+                  He is <span class="drop-blank" data-id="s15" data-ans="our"></span> neighbour Ned!
+                  <span class="drop-blank" data-id="s16" data-ans="his"></span> sons are Rod and Todd.<br>
+                  These are <span class="drop-blank" data-id="s17" data-ans="our"></span> pets! 🐶🐱
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-footer">
+          <span style="color: var(--text-muted); font-weight: 700;">Step 1 of 4</span>
+          <button class="btn-primary" onclick="switchTab('ex2')">Next: Exercise 2 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EXERCISE 2 ==================== -->
+    <section class="exercise-panel" id="ex2">
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <h2>Exercise 2: Possessive 's & s'</h2>
+            <p>Choose the correct possessive form for each sentence.</p>
+          </div>
+        </div>
+
+        <div class="q-list" id="ex2List"></div>
+
+        <div class="panel-footer">
+          <button class="btn-secondary" onclick="switchTab('ex1')">← Back to Ex 1</button>
+          <button class="btn-primary" onclick="switchTab('ex3')">Next: Exercise 3 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EXERCISE 3 ==================== -->
+    <section class="exercise-panel" id="ex3">
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <h2>Exercise 3: Family Vocabulary</h2>
+            <p>Read each definition and select the correct family word.</p>
+          </div>
+        </div>
+
+        <div class="vocab-grid" id="ex3Grid"></div>
+
+        <div class="panel-footer">
+          <button class="btn-secondary" onclick="switchTab('ex2')">← Back to Ex 2</button>
+          <button class="btn-primary" onclick="switchTab('ex4')">Next: Exercise 4 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== EXERCISE 4 ==================== -->
+    <section class="exercise-panel" id="ex4">
+      <div class="exercise-card">
+        <div class="exercise-header">
+          <div>
+            <h2>Exercise 4: Final Mix (Family & Possessives)</h2>
+            <p>Type the correct word from the box into each blank.</p>
+          </div>
+        </div>
+
+        <div class="ex4-bank">
+          <span class="ex4-bank-tag">relatives</span>
+          <span class="ex4-bank-tag">cousins</span>
+          <span class="ex4-bank-tag">generation</span>
+          <span class="ex4-bank-tag">granddaughter</span>
+          <span class="ex4-bank-tag">husband's</span>
+          <span class="ex4-bank-tag">her</span>
+          <span class="ex4-bank-tag">our</span>
+          <span class="ex4-bank-tag">their</span>
+        </div>
+
+        <div class="q-list" id="ex4List"></div>
+
+        <div class="submit-box">
+          <h3>Ready to finish?</h3>
+          <p>Check your progress bar at the top and send your answers to your teacher.</p>
+          <button class="btn-send" id="sendTeacherBtn">📩 Send to Teacher</button>
+          <div class="result-banner" id="resultBanner"></div>
+        </div>
+
+        <div class="panel-footer">
+          <button class="btn-secondary" onclick="switchTab('ex3')">← Back to Ex 3</button>
+          <span style="color: var(--text-muted); font-weight: 700;">Step 4 of 4</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ========================================================
+    // 👇 ВПИШИ СВІЙ TELEGRAM BOT TOKEN ТА CHAT ID ТУТ 👇
+    // ========================================================
+    const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
+    const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID_HERE";
+    // ========================================================
+
+    let studentName = "";
+    let selectedChipId = null;
+
+    // ----- START SCREEN -----
+    const startOverlay = document.getElementById("startOverlay");
+    const studentNameInput = document.getElementById("studentNameInput");
+    const nameError = document.getElementById("nameError");
+    const studentDisplay = document.getElementById("studentDisplay");
+
+    function startHomework() {
+      const val = studentNameInput.value.trim();
+      if (val.length < 2) {
+        nameError.textContent = "Please enter your name (at least 2 letters).";
+        studentNameInput.focus();
+        return;
+      }
+      studentName = val;
+      studentDisplay.textContent = `Student: ${studentName}`;
+      startOverlay.classList.add("hidden");
+      syncStickyOffset();
+    }
+
+    document.getElementById("startBtn").addEventListener("click", startHomework);
+    studentNameInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") startHomework();
+    });
+
+    // ----- TABS -----
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".exercise-panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      syncStickyOffset();
+    }
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    // ----- EXERCISE 1: SIMPSONS WORD BANK & DRAG/CLICK -----
+    const ex1Words = [
+      "our", "my", "her", "Their", "Her",
+      "Their", "Its", "my", "our", "His",
+      "My", "our", "His", "My", "our", "my", "your"
+    ];
+
+    const wordBankEl = document.getElementById("wordBank");
+    const ex1Blanks = Array.from(document.querySelectorAll(".drop-blank"));
+
+    function buildWordBank() {
+      wordBankEl.innerHTML = "";
+      ex1Words.forEach((word, index) => {
+        const chip = document.createElement("div");
+        chip.className = "word-chip";
+        chip.textContent = word;
+        chip.draggable = true;
+        chip.dataset.chipId = `chip-${index}`;
+        chip.dataset.word = word;
+
+        chip.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", chip.dataset.chipId);
+          selectedChipId = chip.dataset.chipId;
+        });
+
+        chip.addEventListener("click", () => {
+          if (chip.classList.contains("used")) return;
+          if (selectedChipId === chip.dataset.chipId) {
+            chip.classList.remove("selected");
+            selectedChipId = null;
+          } else {
+            document.querySelectorAll(".word-chip.selected").forEach(c => c.classList.remove("selected"));
+            chip.classList.add("selected");
+            selectedChipId = chip.dataset.chipId;
+          }
+        });
+
+        wordBankEl.appendChild(chip);
+      });
+    }
+
+    function placeChipInBlank(chipId, blank) {
+      const chip = document.querySelector(`.word-chip[data-chip-id="${chipId}"]`);
+      if (!chip || chip.classList.contains("used")) return;
+
+      if (blank.dataset.chipId) {
+        const oldChip = document.querySelector(`.word-chip[data-chip-id="${blank.dataset.chipId}"]`);
+        if (oldChip) oldChip.classList.remove("used");
+      }
+
+      blank.textContent = chip.dataset.word;
+      blank.dataset.chipId = chipId;
+      blank.classList.add("filled");
+      blank.classList.remove("correct", "wrong");
+
+      chip.classList.add("used");
+      chip.classList.remove("selected");
+      selectedChipId = null;
+      updateProgress();
+    }
+
+    function clearBlank(blank) {
+      if (!blank.dataset.chipId) return;
+      const oldChip = document.querySelector(`.word-chip[data-chip-id="${blank.dataset.chipId}"]`);
+      if (oldChip) oldChip.classList.remove("used");
+      blank.textContent = "";
+      delete blank.dataset.chipId;
+      blank.classList.remove("filled", "correct", "wrong");
+      updateProgress();
+    }
+
+    ex1Blanks.forEach((blank) => {
+      blank.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        blank.classList.add("drag-over");
+      });
+      blank.addEventListener("dragleave", () => blank.classList.remove("drag-over"));
+      blank.addEventListener("drop", (e) => {
+        e.preventDefault();
+        blank.classList.remove("drag-over");
+        const chipId = e.dataTransfer.getData("text/plain") || selectedChipId;
+        if (chipId) placeChipInBlank(chipId, blank);
+      });
+      blank.addEventListener("click", () => {
+        if (selectedChipId) {
+          placeChipInBlank(selectedChipId, blank);
+        } else if (blank.dataset.chipId) {
+          clearBlank(blank);
+        }
+      });
+    });
+
+    document.getElementById("resetEx1Btn").addEventListener("click", () => {
+      ex1Blanks.forEach(clearBlank);
+      selectedChipId = null;
+      document.querySelectorAll(".word-chip.selected").forEach(c => c.classList.remove("selected"));
+    });
+
+    buildWordBank();
+
+    // ----- EXERCISE 2: POSSESSIVE 'S & S' (10 items) -----
+    const ex2Data = [
+      { q: "Homer is _____ father.", opts: ["Bart's", "Barts'", "Barts"], ans: "Bart's" },
+      { q: "These are my _____ glasses. (both grandmother and grandfather)", opts: ["grandparent's", "grandparents'", "grandparents"], ans: "grandparents'" },
+      { q: "That blue car belongs to my wife's mother. It is my _____ car.", opts: ["mother-in-law's", "mother-in-laws'", "mothers-in-law"], ans: "mother-in-law's" },
+      { q: "The _____ toys are all over the living room floor!", opts: ["childrens'", "children's", "childrens"], ans: "children's" },
+      { q: "My _____ bedroom is big because my two brothers share it.", opts: ["siblings'", "sibling's", "siblings"], ans: "siblings'" },
+      { q: "_____ husband is my favourite uncle.", opts: ["Aunt Lisas'", "Aunt Lisa's", "Aunt Lisas"], ans: "Aunt Lisa's" },
+      { q: "Look at the _____ bikes! They are identical because they are twins.", opts: ["twin's", "twins", "twins'"], ans: "twins'" },
+      { q: "My _____ hobby is painting landscapes.", opts: ["stepmother's", "stepmothers'", "stepmothers"], ans: "stepmother's" },
+      { q: "This is _____ house. They live there together.", opts: ["Tom's and Anna's", "Tom and Anna's", "Tom and Annas'"], ans: "Tom and Anna's" },
+      { q: "My _____ name is Leo. He is my sister's son.", opts: ["nephews'", "nephews", "nephew's"], ans: "nephew's" }
+    ];
+
+    const ex2Answers = {};
+    const ex2List = document.getElementById("ex2List");
+
+    ex2Data.forEach((item, idx) => {
+      const div = document.createElement("div");
+      div.className = "q-item";
+      div.id = `ex2-q-${idx}`;
+      div.innerHTML = `
+        <div class="q-prompt"><span class="q-num">${idx + 1}</span>${item.q}</div>
+        <div class="options-row">
+          ${item.opts.map(opt => `<button type="button" class="opt-btn" data-idx="${idx}" data-val="${opt.replace(/"/g, '&quot;')}">${opt}</button>`).join("")}
+        </div>
+      `;
+      ex2List.appendChild(div);
+    });
+
+    ex2List.addEventListener("click", (e) => {
+      const btn = e.target.closest(".opt-btn");
+      if (!btn) return;
+      const idx = btn.dataset.idx;
+      const val = btn.dataset.val;
+      ex2Answers[idx] = val;
+
+      const parent = document.getElementById(`ex2-q-${idx}`);
+      parent.classList.remove("correct", "wrong");
+      parent.querySelectorAll(".opt-btn").forEach(b => {
+        b.classList.remove("selected", "correct-choice", "wrong-choice");
+      });
+      btn.classList.add("selected");
+      updateProgress();
+    });
+
+    // ----- EXERCISE 3: FAMILY VOCABULARY (12 items) -----
+    const ex3Options = [
+      "ancestors", "great-grandparents", "half-sister", "niblings",
+      "niece", "only child", "parents-in-law", "siblings",
+      "spouses", "stepmother", "twins", "uncle"
+    ];
+
+    const ex3Data = [
+      { def: "Your brothers and sisters together", ans: "siblings" },
+      { def: "A child who has no brothers or sisters", ans: "only child" },
+      { def: "Your brother's or sister's daughter", ans: "niece" },
+      { def: "Your mother's or father's brother", ans: "uncle" },
+      { def: "Two children born to the same mother at the same time", ans: "twins" },
+      { def: "Your husband's or wife's parents", ans: "parents-in-law" },
+      { def: "Your father's new wife (not your biological mother)", ans: "stepmother" },
+      { def: "Your grandparents' parents", ans: "great-grandparents" },
+      { def: "People in your family who lived a very long time ago", ans: "ancestors" },
+      { def: "A husband and a wife together", ans: "spouses" },
+      { def: "Your nieces and nephews together", ans: "niblings" },
+      { def: "A sister who shares only one parent with you", ans: "half-sister" }
+    ];
+
+    const ex3Grid = document.getElementById("ex3Grid");
+
+    ex3Data.forEach((item, idx) => {
+      const div = document.createElement("div");
+      div.className = "q-item";
+      div.id = `ex3-q-${idx}`;
+      div.innerHTML = `
+        <div class="q-prompt"><span class="q-num">${idx + 1}</span>${item.def}</div>
+        <select class="vocab-select" id="ex3-sel-${idx}">
+          <option value="">— Choose a word —</option>
+          ${ex3Options.map(w => `<option value="${w}">${w}</option>`).join("")}
+        </select>
+      `;
+      ex3Grid.appendChild(div);
+    });
+
+    ex3Grid.addEventListener("change", (e) => {
+      if (e.target.classList.contains("vocab-select")) {
+        e.target.closest(".q-item").classList.remove("correct", "wrong");
+        updateProgress();
+      }
+    });
+
+    // ----- EXERCISE 4: FINAL MIX (8 items) -----
+    const ex4Data = [
+      { before: "All our aunts, uncles, and grandparents are our ", after: ".", ans: "relatives" },
+      { before: "My aunt and uncle have two kids. They are my ", after: ".", ans: "cousins" },
+      { before: "My grandmother loves ", after: " flower garden very much.", ans: "her" },
+      { before: "Little Maya is my parents' first ", after: ".", ans: "granddaughter" },
+      { before: "My ", after: " mother is my mother-in-law.", ans: "husband's" },
+      { before: "My grandparents belong to an older ", after: ".", ans: "generation" },
+      { before: "We love spending holidays at ", after: " grandparents' house.", ans: "our" },
+      { before: "The twins are super happy because it is ", after: " birthday today!", ans: "their" }
+    ];
+
+    const ex4List = document.getElementById("ex4List");
+
+    ex4Data.forEach((item, idx) => {
+      const div = document.createElement("div");
+      div.className = "q-item";
+      div.id = `ex4-q-${idx}`;
+      div.innerHTML = `
+        <div class="q-prompt" style="margin-bottom:0;">
+          <span class="q-num">${idx + 1}</span>
+          ${item.before}<input type="text" class="inline-input" id="ex4-in-${idx}" autocomplete="off" placeholder="..." />${item.after}
+        </div>
+      `;
+      ex4List.appendChild(div);
+    });
+
+    ex4List.addEventListener("input", (e) => {
+      if (e.target.classList.contains("inline-input")) {
+        e.target.classList.remove("correct", "wrong");
+        e.target.closest(".q-item").classList.remove("correct", "wrong");
+        updateProgress();
+      }
+    });
+
+    // ----- PROGRESS BAR & TAB COMPLETION -----
+    const TOTAL_ITEMS = ex1Blanks.length + ex2Data.length + ex3Data.length + ex4Data.length;
+
+    function getCounts() {
+      const c1 = ex1Blanks.filter(b => b.textContent.trim() !== "").length;
+      const c2 = Object.keys(ex2Answers).length;
+      const c3 = ex3Data.filter((_, i) => document.getElementById(`ex3-sel-${i}`).value !== "").length;
+      const c4 = ex4Data.filter((_, i) => document.getElementById(`ex4-in-${i}`).value.trim() !== "").length;
+      return { c1, c2, c3, c4, total: c1 + c2 + c3 + c4 };
+    }
+
+    function updateProgress() {
+      const { c1, c2, c3, c4, total } = getCounts();
+      const pct = Math.round((total / TOTAL_ITEMS) * 100);
+      document.getElementById("progressFill").style.width = `${pct}%`;
+      document.getElementById("progressText").textContent = `${total} / ${TOTAL_ITEMS} (${pct}%)`;
+
+      const statuses = [
+        { id: "ex1", done: c1 === ex1Blanks.length, num: "1" },
+        { id: "ex2", done: c2 === ex2Data.length, num: "2" },
+        { id: "ex3", done: c3 === ex3Data.length, num: "3" },
+        { id: "ex4", done: c4 === ex4Data.length, num: "4" }
+      ];
+
+      statuses.forEach(({ id, done, num }) => {
+        const tabBtn = document.querySelector(`.tab-btn[data-tab="${id}"]`);
+        const badge = document.getElementById(`badge-${id}`);
+        tabBtn.classList.toggle("done-tab", done);
+        badge.textContent = done ? "✓" : num;
+      });
+    }
+
+    // ----- GRADING & TELEGRAM SUBMISSION -----
+    function gradeAll() {
+      let s1 = 0, s2 = 0, s3 = 0, s4 = 0;
+      const mistakes = [];
+
+      // Grade Ex 1
+      ex1Blanks.forEach((blank, idx) => {
+        const userVal = blank.textContent.trim().toLowerCase();
+        const validAnswers = blank.dataset.ans.toLowerCase().split("|");
+        if (validAnswers.includes(userVal)) {
+          s1++;
+          blank.classList.add("correct");
+          blank.classList.remove("wrong");
+        } else {
+          blank.classList.add("wrong");
+          blank.classList.remove("correct");
+          mistakes.push(`Ex1 #${idx + 1}: "${blank.textContent.trim() || '—'}" (need: ${blank.dataset.ans})`);
+        }
+      });
+
+      // Grade Ex 2
+      ex2Data.forEach((item, idx) => {
+        const userVal = ex2Answers[idx] || "";
+        const box = document.getElementById(`ex2-q-${idx}`);
+        const btns = box.querySelectorAll(".opt-btn");
+        if (userVal === item.ans) {
+          s2++;
+          box.classList.add("correct");
+          btns.forEach(b => { if (b.dataset.val === userVal) b.classList.add("correct-choice"); });
+        } else {
+          box.classList.add("wrong");
+          btns.forEach(b => { if (b.dataset.val === userVal) b.classList.add("wrong-choice"); });
+          mistakes.push(`Ex2 #${idx + 1}: "${userVal || '—'}" (need: ${item.ans})`);
+        }
+      });
+
+      // Grade Ex 3
+      ex3Data.forEach((item, idx) => {
+        const sel = document.getElementById(`ex3-sel-${idx}`);
+        const box = document.getElementById(`ex3-q-${idx}`);
+        if (sel.value === item.ans) {
+          s3++;
+          box.classList.add("correct");
+        } else {
+          box.classList.add("wrong");
+          mistakes.push(`Ex3 #${idx + 1}: "${sel.value || '—'}" (need: ${item.ans})`);
+        }
+      });
+
+      // Grade Ex 4
+      ex4Data.forEach((item, idx) => {
+        const inp = document.getElementById(`ex4-in-${idx}`);
+        const box = document.getElementById(`ex4-q-${idx}`);
+        const normalized = inp.value.trim().toLowerCase().replace("’", "'");
+        if (normalized === item.ans.toLowerCase()) {
+          s4++;
+          inp.classList.add("correct");
+          box.classList.add("correct");
+        } else {
+          inp.classList.add("wrong");
+          box.classList.add("wrong");
+          mistakes.push(`Ex4 #${idx + 1}: "${inp.value.trim() || '—'}" (need: ${item.ans})`);
+        }
+      });
+
+      const totalScore = s1 + s2 + s3 + s4;
+      const totalPct = Math.round((totalScore / TOTAL_ITEMS) * 100);
+      return { s1, s2, s3, s4, totalScore, totalPct, mistakes };
+    }
+
+    document.getElementById("sendTeacherBtn").addEventListener("click", async () => {
+      const counts = getCounts();
+      if (counts.total < TOTAL_ITEMS) {
+        const ok = confirm(`You answered ${counts.total} out of ${TOTAL_ITEMS} questions. Send anyway?`);
+        if (!ok) return;
+      }
+
+      const btn = document.getElementById("sendTeacherBtn");
+      const banner = document.getElementById("resultBanner");
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      const res = gradeAll();
+      const mistakesText = res.mistakes.length
+        ? "\n\n❌ Mistakes:\n" + res.mistakes.slice(0, 15).join("\n") + (res.mistakes.length > 15 ? `\n...and ${res.mistakes.length - 15} more` : "")
+        : "\n\n🌟 Perfect score! No mistakes!";
+
+      const message =
+        `📚 Homework: Family & Possessives\n` +
+        `👤 Student: ${studentName || "Unknown"}\n` +
+        `🏆 Total: ${res.totalScore}/${TOTAL_ITEMS} (${res.totalPct}%)\n\n` +
+        `• Ex 1 (Simpsons): ${res.s1}/${ex1Blanks.length}\n` +
+        `• Ex 2 (Possessive 's): ${res.s2}/${ex2Data.length}\n` +
+        `• Ex 3 (Family Words): ${res.s3}/${ex3Data.length}\n` +
+        `• Ex 4 (Final Mix): ${res.s4}/${ex4Data.length}` +
+        mistakesText;
+
+      if (TELEGRAM_BOT_TOKEN === "YOUR_BOT_TOKEN_HERE" || TELEGRAM_CHAT_ID === "YOUR_CHAT_ID_HERE") {
+        banner.className = "result-banner show warning";
+        banner.textContent = `Score: ${res.totalScore}/${TOTAL_ITEMS} (${res.totalPct}%). Telegram token/chat ID is not configured yet in the code.`;
+        btn.disabled = false;
+        btn.textContent = "📩 Send to Teacher";
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message
+          })
+        });
+
+        if (response.ok) {
+          banner.className = "result-banner show success";
+          banner.textContent = `✅ Sent to teacher! Your result: ${res.totalScore} / ${TOTAL_ITEMS} (${res.totalPct}%). You can review your highlighted answers across the tabs.`;
+          btn.textContent = "✓ Sent!";
+        } else {
+          throw new Error("Telegram API error");
+        }
+      } catch (err) {
+        banner.className = "result-banner show warning";
+        banner.textContent = `Score: ${res.totalScore}/${TOTAL_ITEMS} (${res.totalPct}%). Could not send to Telegram — please check internet connection or bot settings.`;
+        btn.disabled = false;
+        btn.textContent = "📩 Try Sending Again";
+      }
+    });
+
+    function syncStickyOffset() {
+      const header = document.querySelector(".top-header");
+      if (header) {
+        document.documentElement.style.setProperty("--sticky-top", `${header.offsetHeight + 10}px`);
+      }
+    }
+
+    window.addEventListener("resize", syncStickyOffset);
+    syncStickyOffset();
+    updateProgress();
+  </script>
+</body>
+</html>
